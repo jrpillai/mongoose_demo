@@ -1,52 +1,51 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const PlantController = require('./controllers/PlantController');
-const path = require('path');
+// import dependencies
+const dotenv = require('dotenv'); // import dotenv library to access environment variables
+dotenv.config(); // invoke dotenv.config() to read .env file and load into process.env
 
-const app = express();
-const PORT = 3000;
+const express = require('express'); // import express
+const path = require('path'); // import path
+const mongoose = require('mongoose'); // import mongoose
 
+const PlantController = require('./controllers/PlantController'); // import PlantController
+
+const app = express(); // instantiate an express app
+const PORT = 3000; // declare a port to listen to
+
+const plantRouter = require('./routes/plantRoutes'); // import plantRouter
+
+// connect to MongoDB using mongoose ODM and the connection string stored in process.env.MONGO_URI
+// EITHER add an .env file to the root of the project with the key value pair MONGO_URI=<your-mongo-uri>, with the <your-mongo-uri> replaced with your MongoDB connection string in double quotes
+// OR replace process.env.MONGO_URI with your MongoDB connection string
 mongoose
-  .connect(
-    'mongodb+srv://jayanrpillai:codesmithapplegreen@cluster0.svxifty.mongodb.net/mongo_demo?retryWrites=true&w=majority&appName=Cluster0'
-  )
-  .then(() => console.log('Connected to MongoDB'))
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    // Load initial plants after database connection
+    PlantController.loadInitialPlants({}, {}, (err) => {
+      if (err) console.error(err);
+    });
+  })
   .catch((err) => console.error('MongoDB connection error:', err));
 
+// middleware to parse incoming requests with JSON payloads
 app.use(express.json());
+// middleware to parse incoming requests with urlencoded payloads
 app.use(express.urlencoded({ extended: true }));
 
-// Explicitly send the index.html file for the root route
+// explicitly send the index.html file for the root route
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/index.html'));
 });
 
-const plantRouter = express.Router();
+// mount the plantRouter at the /plants route
 app.use('/plants', plantRouter);
-
-plantRouter.post('/', PlantController.createPlant, (req, res) =>
-  res.status(201).json(res.locals.newPlant)
-);
-
-plantRouter.get('/:name', PlantController.getPlant, (req, res) =>
-  res.status(200).json(res.locals.foundPlant)
-);
-
-plantRouter.patch('/:name', PlantController.updatePlant, (req, res) =>
-  res.status(200).json(res.locals.updatedPlant)
-);
-
-plantRouter.delete('/:name', PlantController.deletePlant, (req, res) =>
-  res.status(200).json(res.locals.deletedPlant)
-);
 
 // Unknown route handler
 app.use((req, res) => res.sendStatus(404));
 
-// Global error handler
 // Global error handler middleware
 app.use((err, req, res, next) => {
-  // Step 1: Define a default error object
+  // Define a default error object
   const defaultErr = {
     log: 'Express error handler caught an unknown error', // Log message for debugging
     status: 500, // Default status code for server errors
@@ -63,7 +62,7 @@ app.use((err, req, res, next) => {
   };
 
   // Log the error details for debugging on the server
-  // Include the timestamp and request information to make logs easier to trace
+  // Include the request information to make logs easier to trace
   console.error(errorDetails.log);
   console.error(`Request Method: ${req.method}`);
   console.error(`Request URL: ${req.originalUrl}`);
