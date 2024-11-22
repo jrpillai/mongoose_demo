@@ -1,0 +1,28 @@
+{
+  "name": "mongoose_demo",
+  "version": "1.0.0",
+  "description": "A simple demo application for Mongoose with Express",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon main.js",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mongoose",
+    "express",
+    "crud",
+    "demo"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.15.0",
+    "nodemon": "^3.1.7"
+  }
+}

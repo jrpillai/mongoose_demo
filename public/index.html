@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Store</title>
+    <style>
+      .request-method {
+        color: red;
+      }
+      .fetch-path {
+        color: green;
+      }
+      .request-body {
+        color: blue;
+      }
+      .response-json {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Plant Store</h1>
+
+    <!-- Create Plant -->
+    <h2>Create Plant (CREATE)</h2>
+    <form id="createForm">
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="text" name="type" placeholder="Type" required />
+      <input type="number" name="price" placeholder="Price" required />
+      <button type="submit">Create</button>
+    </form>
+    <div id="createResponse" style="margin-top: 10px"></div>
+
+    <!-- Fetch Plant -->
+    <h2>Get Plant (READ)</h2>
+    <form id="getForm">
+      <input type="text" name="name" placeholder="Name" required />
+      <button type="submit">Fetch</button>
+    </form>
+    <div id="getResponse" style="margin-top: 10px"></div>
+
+    <!-- Update Plant -->
+    <h2>Update Plant (UPDATE)</h2>
+    <form id="updateForm">
+      <input type="text" name="name" placeholder="Name to Update" required />
+      <input type="text" name="type" placeholder="New Type" />
+      <input type="number" name="price" placeholder="New Price" />
+      <button type="submit">Update</button>
+    </form>
+    <div id="updateResponse" style="margin-top: 10px"></div>
+
+    <!-- Delete Plant -->
+    <h2>Delete Plant (DELETE)</h2>
+    <form id="deleteForm">
+      <input type="text" name="name" placeholder="Name" required />
+      <button type="submit">Delete</button>
+    </form>
+    <div id="deleteResponse" style="margin-top: 10px"></div>
+
+    <script>
+      const baseUrl = '/plants';
+
+      const updateResponse = (id, response, method, path, body) => {
+        console.log('Response:', response); // Log the raw JSON response to the console
+
+        // Display the request details and response in the browser
+        const responseElement = document.getElementById(id);
+        responseElement.innerHTML = `
+        <pre>
+<strong class="request-method">Request Method:</strong> <span class="request-method">${method}</span>
+<strong class="fetch-path">Fetch Path:</strong> <span class="fetch-path">${path}</span>
+${
+  body && Object.keys(body).length
+    ? `<strong class="request-body">Body JSON:</strong> <span class="request-body">${JSON.stringify(
+        body,
+        null,
+        2
+      )}</span>`
+    : ''
+}
+<strong class="response-json">Response:</strong> <span class="response-json">${JSON.stringify(
+          response,
+          null,
+          2
+        )}</span>
+        </pre>
+      `;
+      };
+
+      document.getElementById('createForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        const method = 'POST';
+        const path = baseUrl;
+        const body = data;
+        const res = await fetch(path, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const json = await res.json();
+        updateResponse('createResponse', json, method, path, body);
+      };
+
+      document.getElementById('getForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const name = new FormData(e.target).get('name');
+        const method = 'GET';
+        const path = `${baseUrl}/${name}`;
+        const res = await fetch(path);
+        const json = await res.json();
+        updateResponse('getResponse', json, method, path);
+      };
+
+      document.getElementById('updateForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        const name = data.name;
+        delete data.name;
+        const method = 'PATCH';
+        const path = `${baseUrl}/${name}`;
+        const body = data;
+        const res = await fetch(path, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const json = await res.json();
+        updateResponse('updateResponse', json, method, path, body);
+      };
+
+      document.getElementById('deleteForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const name = new FormData(e.target).get('name');
+        const method = 'DELETE';
+        const path = `${baseUrl}/${name}`;
+        const res = await fetch(path, { method: method });
+        const json = await res.json();
+        updateResponse('deleteResponse', json, method, path);
+      };
+    </script>
+  </body>
+</html>
