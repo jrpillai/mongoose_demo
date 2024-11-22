@@ -147,18 +147,19 @@ PlantController.deletePlant = (req, res, next) => {
  * Loads initial plant documents into the database if they are unique.
  * Uses `insertMany` to bulk insert plant data and skips duplicates.
  * Starts your database with a set of initial plants.
+ * inertMany bypasses Mongoose schema validation, save hooks and pre/post middleware.
  */
 PlantController.loadInitialPlants = async (req, res, next) => {
   const initialPlants = [
-    { name: 'Rose', type: 'Flower', price: 10 },
-    { name: 'Cactus', type: 'Succulent', price: 15 },
-    { name: 'Bonsai', type: 'Tree', price: 50 },
-    { name: 'Tulip', type: 'Flower', price: 12 },
-    { name: 'Fern', type: 'Shrub', price: 8 },
-    { name: 'Lavender', type: 'Herb', price: 20 },
-    { name: 'Orchid', type: 'Flower', price: 25 },
-    { name: 'Aloe Vera', type: 'Succulent', price: 18 },
-    { name: 'Maple', type: 'Tree', price: 45 },
+    { name: 'ROSE', type: 'Flower', price: 10 },
+    { name: 'CACTUS', type: 'Succulent', price: 15 },
+    { name: 'BONSAI', type: 'Tree', price: 50 },
+    { name: 'TULIP', type: 'Flower', price: 12 },
+    { name: 'FERN', type: 'Shrub', price: 8 },
+    { name: 'LAVENDER', type: 'Herb', price: 20 },
+    { name: 'ORCHID', type: 'Flower', price: 25 },
+    { name: 'ALOE VERA', type: 'Succulent', price: 18 },
+    { name: 'MAPLE', type: 'Tree', price: 45 },
     { name: 'Sunflower', type: 'Flower', price: 14 },
   ];
 
