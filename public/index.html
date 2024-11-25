@@ -6,16 +6,19 @@
     <title>Plant Store</title>
     <style>
       .request-method {
-        color: red;
+        color: darkorange;
       }
+
       .fetch-path {
-        color: green;
+        color: darkgreen;
       }
+
       .request-body {
-        color: blue;
+        color: darkblue;
       }
+
       .response-json {
-        color: red;
+        color: darkred;
       }
     </style>
   </head>
@@ -28,6 +31,7 @@
       <input type="text" name="name" placeholder="Name" required />
       <input type="text" name="type" placeholder="Type" required />
       <input type="number" name="price" placeholder="Price" required />
+      <input type="text" name="family" placeholder="Family" required />
       <button type="submit">Create</button>
     </form>
     <div id="createResponse" style="margin-top: 10px"></div>
@@ -46,6 +50,7 @@
       <input type="text" name="name" placeholder="Name to Update" required />
       <input type="text" name="type" placeholder="New Type" />
       <input type="number" name="price" placeholder="New Price" />
+      <input type="text" name="family" placeholder="New Family" />
       <button type="submit">Update</button>
     </form>
     <div id="updateResponse" style="margin-top: 10px"></div>
@@ -68,18 +73,18 @@
         const responseElement = document.getElementById(id);
         responseElement.innerHTML = `
         <pre>
-<strong class="request-method">Request Method:</strong> <span class="request-method">${method}</span>
-<strong class="fetch-path">Fetch Path:</strong> <span class="fetch-path">${path}</span>
+<strong class="request-method">Request HTTP Method:</strong> <span class="request-method">${method}</span>
+<strong class="fetch-path">Endpoint URL:</strong> <span class="fetch-path">${path}</span>
 ${
   body && Object.keys(body).length
-    ? `<strong class="request-body">Body JSON:</strong> <span class="request-body">${JSON.stringify(
+    ? `<strong class="request-body">Request Payload (req.body):</strong> <span class="request-body">${JSON.stringify(
         body,
         null,
         2
       )}</span>`
     : ''
 }
-<strong class="response-json">Response:</strong> <span class="response-json">${JSON.stringify(
+<strong class="response-json">Response Body (res.body):</strong> <span class="response-json">${JSON.stringify(
           response,
           null,
           2

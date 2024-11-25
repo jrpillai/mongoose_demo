@@ -21,9 +21,30 @@ const plantSchema = mongoose.Schema({
     type: Number,
     required: true, // This field is mandatory
   },
+
+  // 'family' field: an optional string indicating the plant family
+  family: {
+    type: String,
+    required: false, // This field is optional
+  },
 });
 
-// Add a pre-save hook to capitalize the entire plant name
+/**
+ * Adds a pre-save hook to the Plant schema to ensure the `name` field is fully capitalized before saving.
+ * - This hook triggers before a new document is saved to the database.
+ * - The `pre()` method accepts:
+ *   - The type of hook ('save') as the first argument.
+ *   - A callback function to manipulate the document as the second argument.
+ *
+ * Functionality:
+ * - Converts the value of the `name` field to uppercase before saving.
+ * - Ensures consistency in the format of the `name` field across all documents.
+ * - The save method is call under the hood by the create method, triggering this hook.
+ * - Some methods do not trigger this hook, like update, updateOne, and findOneAndUpdate, and insertMany.
+ *
+ * @see https://mongoosejs.com/docs/middleware.html#pre
+ */
+
 plantSchema.pre('save', function (next) {
   // Check if the name field exists
   if (this.name) {
