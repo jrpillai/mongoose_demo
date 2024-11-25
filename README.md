@@ -1,7 +1,3 @@
-Here’s the complete and updated README ready for copy-pasting:
-
----
-
 # Mongoose Demo: CRUD Application with Express and MongoDB
 
 ## **Overview**
