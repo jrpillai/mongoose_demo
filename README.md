@@ -139,7 +139,7 @@ This project helps you build a basic **CRUD** application using **Mongoose**, **
    MONGO_URI=mongodb://localhost:27017/<database-name>
    ```
    
-4. Alternatively, replace the argument of `mongoose.connect` in `main.js` with your connection string. Uploading this to GitHub is a security risk. 
+4. Alternatively, replace the argument of `mongoose.connect` in `main.js` with your connection string.
 
 
 ---
