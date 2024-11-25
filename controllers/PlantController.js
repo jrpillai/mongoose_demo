@@ -7,7 +7,7 @@ const PlantController = {};
  * Stores the created plant in `res.locals.newPlant` and proceeds to the next middleware.
  */
 PlantController.createPlant = (req, res, next) => {
-  const { name, type, price } = req.body;
+  const { name, type, price, family } = req.body;
 
   /**
    * `create` is a Mongoose method of the Plant model that inserts a new document into the collection.
@@ -15,9 +15,10 @@ PlantController.createPlant = (req, res, next) => {
    * It returns a fully fledged Promise object that resolves to the newly created document or rejects with an error.
    * The new document is specified in the object passed to the `create` method.
    * The object contains the fields and values for the new document.
+   * You can also insert multiple documents by passing an array of document objects, where each object represents a new document to be saved.
    * create calls `new MyModel(doc).save()` on each document under the hood.
    */
-  Plant.create({ name, type, price })
+  Plant.create({ name, type, price, family })
     .then((plant) => {
       res.locals.newPlant = plant;
       return next();
@@ -48,6 +49,8 @@ PlantController.getPlant = (req, res, next) => {
    */
   Plant.findOne({ name })
     .then((plant) => {
+      // uncomment the line below to test the global error handler
+      // throw new Error('This is my custom error I made up');
       if (!plant) {
         return next({
           log: `Plant not found: ${name}`,
@@ -147,20 +150,26 @@ PlantController.deletePlant = (req, res, next) => {
  * Loads initial plant documents into the database if they are unique.
  * Uses `insertMany` to bulk insert plant data and skips duplicates.
  * Starts your database with a set of initial plants.
- * inertMany bypasses Mongoose schema validation, save hooks and pre/post middleware.
+ * insertMany bypasses save hooks and pre/post middleware.
+ * @see https://mongoosejs.com/docs/api/model.html#Model.insertMany()
  */
 PlantController.loadInitialPlants = async (req, res, next) => {
   const initialPlants = [
-    { name: 'ROSE', type: 'Flower', price: 10 },
-    { name: 'CACTUS', type: 'Succulent', price: 15 },
-    { name: 'BONSAI', type: 'Tree', price: 50 },
-    { name: 'TULIP', type: 'Flower', price: 12 },
-    { name: 'FERN', type: 'Shrub', price: 8 },
-    { name: 'LAVENDER', type: 'Herb', price: 20 },
-    { name: 'ORCHID', type: 'Flower', price: 25 },
-    { name: 'ALOE VERA', type: 'Succulent', price: 18 },
-    { name: 'MAPLE', type: 'Tree', price: 45 },
-    { name: 'Sunflower', type: 'Flower', price: 14 },
+    { name: 'ROSE', type: 'Flower', family: 'Rosaceae', price: 10 },
+    { name: 'CACTUS', type: 'Succulent', family: 'Cactaceae', price: 15 },
+    { name: 'BONSAI', type: 'Tree', family: 'Various', price: 50 },
+    { name: 'TULIP', type: 'Flower', family: 'Liliaceae', price: 12 },
+    { name: 'FERN', type: 'Shrub', family: 'Polypodiaceae', price: 8 },
+    { name: 'LAVENDER', type: 'Herb', family: 'Lamiaceae', price: 20 },
+    { name: 'ORCHID', type: 'Flower', family: 'Orchidaceae', price: 25 },
+    {
+      name: 'ALOE VERA',
+      type: 'Succulent',
+      family: 'Asphodelaceae',
+      price: 18,
+    },
+    { name: 'MAPLE', type: 'Tree', family: 'Sapindaceae', price: 45 },
+    { name: 'SUNFLOWER', type: 'Flower', family: 'Asteraceae', price: 14 },
   ];
 
   try {
