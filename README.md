@@ -234,6 +234,7 @@ Defines the API endpoints and links them to controller methods.
 
 4. **Handling Errors**:
    - Observe how errors (e.g., duplicate keys, missing fields) are managed in the `PlantController`.
+   - To explore the global error handler, uncomment the line throw new Error('This is my custom error I made up'); in the getPlant method. This triggers a Node.js error object and demonstrates how the application responds to unexpected errors.
 
 ---
 
