@@ -176,7 +176,7 @@ Use Postman to test the following endpoints:
 
 ### **Front-end**
 
-Open `index.html` in your browser to interact with the API. Use the forms provided to make requests and view responses.
+Open `index.html` in your browser by going to the root route at [http://localhost:3000](http://localhost:3000) to interact with the API. Use the forms provided to make requests and view responses.
 
 ---
 
